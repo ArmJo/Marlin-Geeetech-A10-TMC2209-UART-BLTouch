@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +25,7 @@
 #if ENABLED(LCD_SET_PROGRESS_MANUALLY)
 
 #include "../gcode.h"
-#include "../../lcd/ultralcd.h"
+#include "../../lcd/marlinui.h"
 #include "../../sd/cardreader.h"
 
 /**
@@ -33,18 +33,15 @@
  *
  * Example:
  *   M73 P25 ; Set progress to 25%
- *
- * Notes:
- *   This has no effect during an SD print job
  */
 void GcodeSuite::M73() {
-  if (parser.seen('P'))
+  if (parser.seenval('P'))
     ui.set_progress((PROGRESS_SCALE) > 1
       ? parser.value_float() * (PROGRESS_SCALE)
       : parser.value_byte()
     );
-  #if BOTH(LCD_SET_PROGRESS_MANUALLY, USE_M73_REMAINING_TIME)
-    if (parser.seen('R')) ui.set_remaining_time(60 * parser.value_ulong());
+  #if ENABLED(USE_M73_REMAINING_TIME)
+    if (parser.seenval('R')) ui.set_remaining_time(60 * parser.value_ulong());
   #endif
 }
 
